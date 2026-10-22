@@ -15,8 +15,8 @@ http.createServer(async (req, res) => {
     const d = Object.fromEntries(new URLSearchParams(body));
     if (d.website) { res.writeHead(303, { Location: "/thank-you" }); return res.end(); } // honeypot
     const reg = { first_name: d.first_name || "", last_name: d.last_name || "", email: d.email || "",
-      phone: d.phone || "", sms_consent: d.sms_consent === "yes", terms_accepted: d.terms === "yes",
-      consent_text_version: "2026-10-20", ip: (req.headers["x-forwarded-for"] || "").split(",")[0],
+      phone: d.phone || "", sms_marketing: d.sms_marketing === "yes", sms_updates: d.sms_updates === "yes", sms_consent: d.sms_consent === "yes" || d.sms_marketing === "yes" || d.sms_updates === "yes", terms_accepted: d.terms === "yes",
+      consent_text_version: "2026-10-22", ip: (req.headers["x-forwarded-for"] || "").split(",")[0],
       user_agent: req.headers["user-agent"] || "", ts: new Date().toISOString(), source: "theproclub.us/sms" };
     console.log("OPTIN", JSON.stringify(reg));
     if (WEBHOOK) { try { await fetch(WEBHOOK, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(reg) }); } catch (e) { console.log("webhook error", e.message); } }
